@@ -52,9 +52,7 @@ export class C2CService {
 
     async transfer(card: CartInfo, destination: string, amount: number) {
         const result = await this.client.createTransfer(card.cardDetails, amount, destination);
-        console.log(result);
         const optResponse = await this.client.requestOtp(card.cardDetails, amount, destination, result.trsd);
-        console.log(optResponse);
         const otp = await waitOTP();
         //const publicKey = await this.cardClient.getCardKey(card.transactionId, card.keyId);
         const publicKey = crypto.createPublicKey({
@@ -63,7 +61,7 @@ export class C2CService {
             type: 'spki'
         })
 
-        const result2 = await this.client.finalizeTransfer(
+        return await this.client.finalizeTransfer(
             card.cardDetails,
             amount,
             destination,
@@ -74,8 +72,6 @@ export class C2CService {
             publicKey,
             optResponse.hsd
         );
-
-        console.log(result2);
     }
 }
 
@@ -195,7 +191,6 @@ export class C2CClient {
         }
 
         const result = await this.client.sendRequest(url, op, options);
-        console.log(result);
         return result.ej;
     }
 
@@ -211,16 +206,6 @@ export class C2CClient {
         hsd: string
     ) {
 
-        console.log(
-            card,
-            amount,
-            destination,
-            trsd,
-            ccv,
-            expireDate,
-            otp,
-            publicKey,
-            hsd);
         const url = "https://apms.asanpardakht.ir/as/ctc/app/1/10009";
         const op = 220;
 
@@ -285,8 +270,6 @@ export class CardClient {
         const res = await this.httpClient.post(url, body, {
             headers
         });
-
-        console.log(res.data);
 
         const keyData = res.data.keyData;
         return keyData;
