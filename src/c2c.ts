@@ -1,6 +1,6 @@
 import { AxiosInstance } from "axios";
 import crypto, { KeyObject } from 'crypto'
-import { Client2 } from "./client";
+import { Client } from "./client";
 import { waitOTP } from "./utils";
 import { IUser, User } from "./userdata";
 import { createHttpClient } from "./http-client";
@@ -16,7 +16,7 @@ interface CartInfo {
 export class C2CServiceFactory {
     static create(user: IUser) {
         const httpClient = createHttpClient();
-        const client = new Client2(httpClient, user);
+        const client = new Client(httpClient, user);
         const c2cClient = new C2CClient(client, user);
         return new C2CService(c2cClient);
     }
@@ -80,10 +80,10 @@ export class C2CService {
 }
 
 export class C2CClient {
-    client: Client2;
+    client: Client;
     user: User;
 
-    constructor(client: Client2, user: User) {
+    constructor(client: Client, user: User) {
         this.client = client;
         this.user = user;
     }

@@ -1,4 +1,4 @@
-import { Client2, device, app } from "./client";
+import { Client, device, app } from "./client";
 import { createHttpClient } from "./http-client";
 import { IUser } from "./userdata";
 import { waitOTP } from "./utils";
@@ -7,7 +7,7 @@ import { waitOTP } from "./utils";
 export class AuthServiceFactory {
     static create(user: IUser) {
         const httpClient = createHttpClient();
-        const client = new Client2(httpClient, user);
+        const client = new Client(httpClient, user);
         const authClient = new AuthClient(client);
         return new AuthService(authClient);
     }
@@ -36,10 +36,10 @@ export class AuthService {
 }
 
 export class AuthClient {
-    client: Client2;
+    client: Client;
     private static URL = "https://apms.asanpardakht.ir/as/w01/auth/1/10009";
 
-    constructor(client: Client2) {
+    constructor(client: Client) {
         this.client = client;
     }
 

@@ -34,7 +34,7 @@ export const app = {
     packageName: "com.sibche.aspardproject.app"
 }
 
-export class Client2 {
+export class Client {
     userData: User;
     httpClient: AxiosInstance;
 
@@ -109,10 +109,6 @@ export class Client2 {
             throw new Error("Client Error: " + result.ds);
         }
 
-        /*
-        this.timeDiff = parseInt(result.sm.split(";")[0]) - Math.floor(new Date().getTime() / 1000);
-        this.trCount++;
-        */
         this.userData.increaseTR();
         this.userData.saveTimeDiff(result.sm);
         return result;
@@ -147,10 +143,10 @@ export class AuthService {
 }
 
 export class AuthClient {
-    client: Client2;
+    client: Client;
     private static URL = "https://apms.asanpardakht.ir/as/w01/auth/1/10009";
 
-    constructor(client: Client2) {
+    constructor(client: Client) {
         this.client = client;
     }
 
