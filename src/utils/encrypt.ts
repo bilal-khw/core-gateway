@@ -1,7 +1,8 @@
 import crypto from 'crypto'
 import fs from 'fs'
-import { base64Decode, base64Encode } from './utils';
+import { base64Decode, base64Encode } from '.';
 import { calc, calc2 } from './native';
+import path from 'path';
 
 export class EncryptUtil {
     private publicKey: string;
@@ -9,7 +10,7 @@ export class EncryptUtil {
     private iv: Buffer;
 
     constructor(j: number) {
-        this.publicKey = fs.readFileSync("../public_key.crt").toString();
+        this.publicKey = fs.readFileSync(path.resolve(__dirname, "../public_key.crt")).toString();
         this.aesKey = this.generateAesKey();
         this.iv = this.generateIV(j);
     }

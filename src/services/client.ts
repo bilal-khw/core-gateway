@@ -1,10 +1,10 @@
 
 import { AxiosInstance } from "axios";
-import { calc3 } from "./native";
-import { base64EncodeString } from "./utils";
-import { EncryptUtil } from "./encrypt";
+import { calc3 } from "../utils/native";
+import { base64EncodeString } from "../utils";
+import { EncryptUtil } from "../utils/encrypt";
 import { IUser, User } from "./userdata";
-import { logger } from "./logger";
+import { logger } from "../utils/logger";
 
 export const device = {
     androidId: "a7626cd18a1be623",
@@ -101,6 +101,7 @@ export class Client {
         const response = util.decryptRequest(res.data);
 
         logger.info(response, "Response body");
+        console.log("resp === >>",response)
         const result = JSON.parse(response);
 
 

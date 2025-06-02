@@ -1,16 +1,23 @@
 {
   "scripts": {
     "build": "tsc",
-    "start": "npm run build && node ./dist/index.js | npx pino-pretty"
+    "start": "npm run build && node ./dist/index.js | npx pino-pretty",
+    "debug": "ts-node --transpile-only src/index.ts",
+    "dev": "nodemon --exec \"npm run build && node ./dist/index.js\" --watch index.ts"
   },
   "dependencies": {
     "axios": "^1.7.9",
+    "express": "^5.1.0",
     "https-proxy-agent": "^7.0.6",
+    "jsonwebtoken": "^9.0.2",
     "pino": "^9.6.0"
   },
   "devDependencies": {
+    "@types/express": "^5.0.2",
+    "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^22.10.5",
     "pino-pretty": "^13.0.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
   }
 }

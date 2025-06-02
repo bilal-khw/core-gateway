@@ -1,6 +1,7 @@
-import { Client, device, app } from "./client";
-import { createHttpClient } from "./http-client";
-import { IUser } from "./userdata";
+import { Client, device, app } from "./services/client";
+import config from "./config";
+import { createHttpClient } from "./utils/http-client";
+import { IUser } from "./services/userdata";
 import { waitOTP } from "./utils";
 
 
@@ -23,11 +24,25 @@ export class AuthService {
     async login(phone: string) {
         phone = phone.replace(/^0/, "+");
         const initResponse = await this.authClient.initLogin();
-        await this.authClient.requestOtp(phone, initResponse.activation_id, initResponse.register_token);
-        const otp = await waitOTP();
-        await this.authClient.sendOtp(phone, initResponse.activation_id, initResponse.register_token, otp);
-        const loginData = await this.authClient.finalizeLogin(phone, initResponse.activation_id, initResponse.register_token);
-        return loginData;
+        console.log("🚀 ~ AuthService ~ login ~ initResponse.activation_id:", initResponse.activation_id,initResponse.register_token)
+        const resp = await this.authClient.requestOtp(phone, initResponse.activation_id, initResponse.register_token);
+        if (resp)
+            return {
+                activationId: initResponse.activation_id,
+                registerToken: initResponse.register_token,
+            };
+        else
+            throw new Error("Failed to request OTP");
+    }
+    async verifyOtp(phone: string, activationId: string, registerToken: string, otp: string) {
+        try {
+            // const otp = await waitOTP();
+            await this.authClient.sendOtp(phone, activationId, registerToken, otp);
+            const loginData = await this.authClient.finalizeLogin(phone, activationId, registerToken);
+            return loginData;
+        } catch (error) {
+            throw new Error("Failed to verify OTP: " + error);
+        }
     }
 
     async refreshLogin(phone: string, appId: string, refreshToken: string) {
@@ -37,7 +52,7 @@ export class AuthService {
 
 export class AuthClient {
     client: Client;
-    private static URL = "https://apms.asanpardakht.ir/as/w01/auth/1/10009";
+    private static URL = config.URI
 
     constructor(client: Client) {
         this.client = client;
@@ -64,7 +79,7 @@ export class AuthClient {
                 region: device.region,
             }
         }
-        return await this.client.sendRequest(AuthClient.URL, op, options);
+        return await this.client.sendRequest(AuthClient.URL, op, options);  
     }
 
     async sendOtp(phone: string, activationId: string, registerToken: string, activationCode: string) {

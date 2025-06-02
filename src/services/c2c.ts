@@ -1,9 +1,9 @@
 import { AxiosInstance } from "axios";
 import crypto, { KeyObject } from 'crypto'
 import { Client } from "./client";
-import { waitOTP } from "./utils";
+import { waitOTP } from "../utils";
 import { IUser, User } from "./userdata";
-import { createHttpClient } from "./http-client";
+import { createHttpClient } from "../utils/http-client";
 
 interface CartInfo {
     cardDetails: string;
